@@ -166,17 +166,20 @@ python src/analyze_errors.py
 
 **Output:**
 
-- Three days with the largest absolute errors in 2025  
+- Days where Linear Regression error is above its average MAE in 2025  
 - For each of these days:
   - Target date and input date  
   - Predicted and actual temperature  
   - Absolute error and direction (overestimated / underestimated)  
   - Meteorological conditions on the three days before and the target day  
 - Output file: `outputs/high_error_days_model_comparison.csv` containing:
-  - Dates of high-error days  
+  - Dates where Linear Regression error exceeds its MAE  
   - Actual and predicted temperatures for all models  
   - Absolute error for each model  
-  - Best model for each day (lowest absolute error)
+  - Best model for each day (lowest absolute error)  
+- Additional output:
+  - Top 10 days with the largest absolute errors for Linear Regression (regardless of error sign)  
+  - Detailed review of the 3 days with the largest absolute errors, including weather context
 
 ## Error Analysis (Summary)
 
