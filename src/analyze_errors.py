@@ -156,13 +156,13 @@ for name, model in models.items():
 
 
 # ==========================================================
-# 6) Days where Ridge error is above its average
+# 6) Days where Linear Regression error is above its average
 # ==========================================================
-ridge_error_col = "Ridge_abs_error"
-ridge_mae = comparison_df[ridge_error_col].mean()
+lr_error_col = "Linear_Regression_abs_error"
+lr_mae = comparison_df[lr_error_col].mean()
 
 high_error_days = comparison_df[
-    comparison_df[ridge_error_col] > ridge_mae
+    comparison_df[lr_error_col] > lr_mae
 ].copy()
 
 error_cols = [
@@ -181,7 +181,7 @@ high_error_days["Best_model_error"] = high_error_days[error_cols].min(
 )
 
 high_error_days = high_error_days.sort_values(
-    ridge_error_col, ascending=False
+    lr_error_col, ascending=False
 )
 
 high_error_days.to_csv(HIGH_ERROR_DAYS_PATH, index=False)
@@ -191,23 +191,23 @@ high_error_days.to_csv(HIGH_ERROR_DAYS_PATH, index=False)
 # 7) Summary: model comparison on high-error days
 # ==========================================================
 print("\n" + "=" * 70)
-print("=== Model Comparison on High-Error Ridge Days ===")
-print(f"Ridge MAE over all 2025 test days: {ridge_mae:.3f} °C")
+print("=== Model Comparison on High-Error Linear Regression Days ===")
+print(f"Linear Regression MAE over all 2025 test days: {lr_mae:.3f} °C")
 print(
-    f"Days where Ridge error > Ridge MAE: "
+    f"Days where Linear Regression error > its MAE: "
     f"{len(high_error_days)} out of {len(comparison_df)}"
 )
 
 print("\nNumber of times each model was best on these days:")
 print(high_error_days["Best_model_for_day"].value_counts().to_string())
 
-print("\n=== Top 10 Largest Ridge Errors ===")
+print("\n=== Top 10 Largest Linear Regression Errors ===")
 
 display_cols = [
     "target_date",
     "actual_tavg",
-    "Ridge_pred",
-    "Ridge_abs_error",
+    "Linear_Regression_pred",
+    "Linear_Regression_abs_error",
     "Best_model_for_day",
     "Best_model_error",
 ]
@@ -219,8 +219,8 @@ print(
         index=False,
         formatters={
             "actual_tavg": "{:.2f}".format,
-            "Ridge_pred": "{:.2f}".format,
-            "Ridge_abs_error": "{:.2f}".format,
+            "Linear_Regression_pred": "{:.2f}".format,
+            "Linear_Regression_abs_error": "{:.2f}".format,
             "Best_model_error": "{:.2f}".format,
         },
     )
