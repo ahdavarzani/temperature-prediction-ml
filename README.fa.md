@@ -76,6 +76,8 @@ python src/download_data.py
 project/
 ├── data/
 │   └── weather.csv
+├── docs/
+│   └── work report.docx
 ├── models/
 │   ├── best_temperature_model.joblib
 │   └── model_features.joblib
