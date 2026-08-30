@@ -194,9 +194,6 @@ python src/analyze_errors.py
 
 ## منبع داده
 
-Open-Meteo. Historical Weather API.  
-داده‌ها از طریق API آرشیو Open-Meteo و با استفاده از اسکریپت `src/download_data.py` دریافت می‌شوند.
-
 - مستندات API: https://open-meteo.com/en/docs/historical-weather-api
 
 [نسخه فارسی](README.fa.md) | [English version](README.md)
