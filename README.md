@@ -76,6 +76,8 @@ Top permutation-importance features are led by `doy_cos` (seasonal position), `t
 project/
 ├── data/
 │   └── weather.csv
+├── docs/
+│   └── work report.docx
 ├── models/
 │   ├── best_temperature_model.joblib
 │   └── model_features.joblib
