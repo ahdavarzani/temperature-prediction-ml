@@ -34,17 +34,17 @@ Key request parameters:
 
 ## Feature Engineering
 
-A total of 46 new features are constructed from the raw data, including:
+A total of 38 engineered features are constructed on top of the 7 raw variables (45 features in total), including:
 
-- Lagged temperature features (1, 2, 3, 7, and 14 days)  
-- Rolling mean and standard deviation of temperature over 3-, 7-, 14-, and 30-day windows  
-- Short-term changes in temperature, pressure, and wind speed  
-- Temperature range, midpoint, and deviation from 30-day rolling mean  
-- Seasonal and temporal features (month, day-of-year, sine/cosine of day-of-year, winter/summer/transition periods)  
-- Interaction terms between temperature and pressure, wind, and precipitation  
-- Variability, short-term trend, and flags for anomalous temperature
+- Lagged temperature features (1, 2, 3, 7, and 14 days), plus 1- and 3-day lags for `tmin`/`tmax`
+- Rolling mean and standard deviation of temperature over 3-, 7-, 14-, and 30-day windows
+- Short-term changes in temperature, pressure, and wind speed
+- Temperature range, midpoint, and deviation from 30-day rolling mean
+- Seasonal and temporal features (month, day-of-year, sine/cosine of day-of-year, winter/summer flags)
+- Rain-based interaction (`temp_range_rain_interaction`), volatility, short-term trend, and flags for anomalous temperature
+- Humidity-based features: dew point (Magnus formula), temperature-dewpoint spread, humidity lag/rolling mean
 
-After feature engineering, the dataset contains 46 features plus the target variable.
+After feature engineering, the dataset contains 45 features plus the target variable.
 
 ## Models and Results
 
@@ -57,16 +57,18 @@ The following models are compared:
 - Gradient Boosting Regressor  
 - XGBoost Regressor  
 
-The best model based on 2024 validation is Linear Regression.
+The best model based on 2024 validation is Ridge Regression.
 
 ### Final Test Results (Year 2025)
 
-| Metric | Baseline | Linear Regression |
+| Metric | Baseline | Ridge |
 |---|---:|---:|
-| MAE | 1.196 | 0.975 |
-| RMSE | 1.579 | 1.248 |
+| MAE | 1.196 | 1.005 |
+| RMSE | 1.579 | 1.276 |
 
-MAE improvement over Baseline: approximately 18.5%.
+MAE improvement over Baseline: approximately 15.95%.
+
+Top permutation-importance features are led by `doy_cos` (seasonal position), `tavg`, and short-term temperature history (`tavg_roll_30_mean`, `tavg_lag_1`) — a much more physically sensible ranking than before the fixes above, with no single feature artificially dominating the rest.
 
 ## Project Structure
 
@@ -137,7 +139,7 @@ python src/train_temperature_model.py
 
 **Outputs:**
 
-- `models/best_temperature_model.joblib`: Final Linear Regression model  
+- `models/best_temperature_model.joblib`: Final Ridge Regression model  
 - `models/model_features.joblib`: List of features used  
 - `outputs/model_results_2025.csv`: Predictions and errors for 2025  
 - `outputs/feature_importance_2025.csv`: Feature importance scores  
@@ -156,7 +158,6 @@ The script interactively asks for a date and displays for that date:
 
 - Actual and predicted temperature  
 - Absolute error  
-- Values of important input features (e.g., `tavg`, `tavg_lag_1`, `tavg_roll_30_mean`, etc.)
 
 ### 5) Analyze High-Error Days
 
@@ -166,19 +167,19 @@ python src/analyze_errors.py
 
 **Output:**
 
-- Days where Linear Regression error is above its average MAE in 2025  
+- Days where the best model's error is above its average MAE in 2025  
 - For each of these days:
   - Target date and input date  
   - Predicted and actual temperature  
   - Absolute error and direction (overestimated / underestimated)  
   - Meteorological conditions on the three days before and the target day  
 - Output file: `outputs/high_error_days_model_comparison.csv` containing:
-  - Dates where Linear Regression error exceeds its MAE  
+  - Dates where the best model's error exceeds its MAE  
   - Actual and predicted temperatures for all models  
   - Absolute error for each model  
   - Best model for each day (lowest absolute error)  
 - Additional output:
-  - Top 10 days with the largest absolute errors for Linear Regression (regardless of error sign)  
+  - Top 10 days with the largest absolute errors (regardless of error sign)  
   - Detailed review of the 3 days with the largest absolute errors, including weather context
 
 ## Error Analysis (Summary)
@@ -193,10 +194,6 @@ Large errors typically occur during rapid temperature drops or fast-changing wea
 
 ## Data Source
 
-Open-Meteo. Historical Weather API.  
-Data are retrieved via the Open-Meteo Archive API using the `src/download_data.py` script.
-
-- Website: https://open-meteo.com/  
 - API Documentation: https://open-meteo.com/en/docs/historical-weather-api
 
 [English version](README.md) | [نسخه فارسی](README.fa.md)
