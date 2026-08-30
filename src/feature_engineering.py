@@ -52,15 +52,11 @@ def create_features(df):
     df["doy_sin"] = np.sin(2 * np.pi * df["day_of_year"] / 366)
     df["doy_cos"] = np.cos(2 * np.pi * df["day_of_year"] / 366)
     
-    # --- Interaction features ---
-    df["temp_pressure_interaction"] = df["tavg"] * df["pres"]
-    df["temp_wind_interaction"] = df["tavg"] * df["wspd"]
     df["temp_range_rain_interaction"] = df["temp_range"] * df["has_rain"]
-    
+
     # --- Seasonal binary features ---
     df["is_winter"] = df["month"].isin([12, 1, 2]).astype(int)
     df["is_summer"] = df["month"].isin([6, 7, 8]).astype(int)
-    df["is_season_transition"] = df["month"].isin([3, 4, 9, 10]).astype(int)
     
     # --- Volatility features ---
     df["temp_volatility_7d"] = df["tavg"].shift(1).rolling(7).std()
@@ -82,9 +78,9 @@ def create_features(df):
     # --- Consecutive rain days ---
     df["consecutive_rain_days"] = df["has_rain"].rolling(7).sum()
     
-    # --- Relative pressure (monthly anomaly) ---
-    monthly_pressure_mean = df.groupby("month")["pres"].transform("mean")
-    df["pressure_relative"] = df["pres"] - monthly_pressure_mean
+    df["pressure_relative"] = (
+        df["pres"] - df["pres"].shift(1).rolling(365, min_periods=180).mean()
+    )
     
     # --- Extreme temperature flag ---
     temp_30d_mean = df["tavg"].shift(1).rolling(30).mean()
@@ -92,5 +88,15 @@ def create_features(df):
     df["extreme_temp_flag"] = (
         (df["tavg"] - temp_30d_mean).abs() > 2 * temp_30d_std
     ).astype(int)
-    
+
+    df["rhum_lag_1"] = df["rhum"].shift(1)
+    df["rhum_roll_7_mean"] = df["rhum"].shift(1).rolling(7).mean()
+
+    a, b = 17.62, 243.12
+    rh_safe = df["rhum"].clip(lower=1, upper=100)  # avoid log(0)
+    gamma = (a * df["tavg"]) / (b + df["tavg"]) + np.log(rh_safe / 100.0)
+    df["dew_point"] = (b * gamma) / (a - gamma)
+
+    df["temp_dewpoint_spread"] = df["tavg"] - df["dew_point"]
+
     return df
