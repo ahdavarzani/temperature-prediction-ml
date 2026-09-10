@@ -85,9 +85,11 @@ project/
 │   ├── model_results_2025.csv
 │   ├── feature_importance_2025.csv
 │   ├── high_error_days_model_comparison.csv
+│   ├── monthly_mae_2025.csv
 │   ├── tehran_2025_prediction_vs_actual.png
 │   ├── tehran_2024_validation_comparison.png
-│   └── tehran_feature_importance.png
+│   ├── tehran_feature_importance.png
+│   └── tehran_2025_monthly_mae.png
 ├── src/
 │   ├── __init__.py
 │   ├── config.py
@@ -96,6 +98,7 @@ project/
 │   ├── train_temperature_model.py
 │   ├── predict_for_date.py
 │   ├── analyze_errors.py
+│   ├── monthly_mae.py
 │   └── download_data.py
 ├── README.md
 ├── README.fa.md
@@ -183,6 +186,19 @@ python src/analyze_errors.py
 - خروجی‌های اضافی:
   - 10 روز با بیشترین خطای مطلق (بدون توجه به جهت خطا)  
   - بررسی دقیق 3 روز با بیشترین خطای مطلق، همراه با شرایط هواشناسی اطراف
+
+### 6) تحلیل ماهانه خطاها
+
+```bash
+python src/monthly_mae.py
+```
+
+**خروجی:**
+
+- خطای میانگین مطلق مدل نهایی (Ridge) برای هر ماه از سال آزمون 2025، بر اساس تاریخ روز هدف  
+- خلاصه کنسولی شامل MAE کل، بهترین و بدترین ماه  
+- فایل خروجی: `outputs/monthly_mae_2025.csv` شامل شماره ماه، MAE ماهانه و تعداد روزها  
+- نمودار خروجی: `outputs/tehran_2025_monthly_mae.png` (میله‌های MAE ماهانه به همراه خط مرجع MAE کل)
 
 ## تحلیل خطاها (خلاصه)
 
