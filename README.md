@@ -85,9 +85,11 @@ project/
 │   ├── model_results_2025.csv
 │   ├── feature_importance_2025.csv
 │   ├── high_error_days_model_comparison.csv
+│   ├── monthly_mae_2025.csv
 │   ├── tehran_2025_prediction_vs_actual.png
 │   ├── tehran_2024_validation_comparison.png
-│   └── tehran_feature_importance.png
+│   ├── tehran_feature_importance.png
+│   └── tehran_2025_monthly_mae.png
 ├── src/
 │   ├── __init__.py
 │   ├── config.py
@@ -96,6 +98,7 @@ project/
 │   ├── train_temperature_model.py
 │   ├── predict_for_date.py
 │   ├── analyze_errors.py
+│   ├── monthly_mae.py
 │   └── download_data.py
 ├── README.md
 ├── README.fa.md
@@ -183,6 +186,19 @@ python src/analyze_errors.py
 - Additional output:
   - Top 10 days with the largest absolute errors (regardless of error sign)  
   - Detailed review of the 3 days with the largest absolute errors, including weather context
+
+### 6) Monthly Error Analysis
+
+```bash
+python src/monthly_mae.py
+```
+
+**Output:**
+
+- Mean absolute error of the final Ridge model for each month of the 2025 test year, grouped by target date  
+- Console summary including overall MAE, best and worst months  
+- Output file: `outputs/monthly_mae_2025.csv` (month, monthly MAE, number of days)  
+- Output plot: `outputs/tehran_2025_monthly_mae.png` (monthly MAE bars with the overall-MAE reference line)
 
 ## Error Analysis (Summary)
 
