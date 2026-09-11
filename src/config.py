@@ -22,11 +22,13 @@ FEATURES_PATH = MODELS_DIR / "model_features.joblib"
 RESULTS_PATH = OUTPUTS_DIR / "model_results_2025.csv"
 IMPORTANCE_CSV_PATH = OUTPUTS_DIR / "feature_importance_2025.csv"
 HIGH_ERROR_DAYS_PATH = OUTPUTS_DIR / "high_error_days_model_comparison.csv"
+MONTHLY_MAE_CSV_PATH = OUTPUTS_DIR / "monthly_mae_2025.csv"
 
 
 PREDICTION_PLOT = OUTPUTS_DIR / "tehran_2025_prediction_vs_actual.png"
 COMPARISON_PLOT = OUTPUTS_DIR / "tehran_2024_validation_comparison.png"
 IMPORTANCE_PLOT = OUTPUTS_DIR / "tehran_feature_importance.png"
+MONTHLY_MAE_PLOT = OUTPUTS_DIR / "tehran_2025_monthly_mae.png"
 
 
 # ==========================================================
